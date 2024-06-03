@@ -1,0 +1,44 @@
+#include <iostream>
+#include<list>
+#include<bits/stdc++.h>
+using namespace std;
+template<typename T>
+class Graph{
+  public:
+  map<T ,list<pair<T,int>>>addList;
+
+  //directed or undirectd;
+  void addEdge(T u , T v, int wt , bool direction){
+    //directed
+    if(direction==1){
+      addList[u].push_back({v,wt});
+
+    }
+    //undirected
+    else{
+      addList[u].push_back({v,wt});
+      addList[v].push_back({u,wt});
+    }
+    printList();
+    cout<<endl;
+  }
+  void printList(){
+    for(auto i : addList){
+      cout<<i.first<<":{";
+      for(pair<T,int>p : i.second){
+        cout<<"{"<<p.first<<","<<p.second<<"},";
+      }
+      cout<<"}"<<endl;
+
+    }
+  }
+};
+int main(){
+ Graph<char> g;
+ g.addEdge('a','b',4,0);
+ g.addEdge('a','c',5,0);
+ g.addEdge('a','d',7,0);
+ g.addEdge('a','e',2,0);
+ g.addEdge('b','c',7,0);
+
+}
