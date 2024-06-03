@@ -1,0 +1,76 @@
+#include <iostream>
+#include<list>
+#include<bits/stdc++.h>
+using namespace std;
+template<typename T>
+class Graph{
+  public:
+  map<T ,list<pair<T,int>>>addList;
+
+  //directed or undirectd;
+  void addEdge(T u , T v, int wt , bool direction){
+    //directed
+    if(direction==1){
+      addList[u].push_back({v,wt});
+
+    }
+    //undirected
+    else{
+      addList[u].push_back({v,wt});
+      addList[v].push_back({u,wt});
+    }
+    // printList();
+    // cout<<endl;
+  }
+  void printList(){
+    for(auto i : addList){
+      cout<<i.first<<":{";
+      for(pair<T,int>p : i.second){
+        cout<<"{"<<p.first<<","<<p.second<<"},";
+      }
+      cout<<"}"<<endl;
+
+    }
+  }
+    void BFS(T src ,map<int,bool>&vis){
+      //visited
+      
+
+      queue<T>q;
+      q.push(src);
+      while(!q.empty()){
+        T frontnode = q.front();
+        cout<<frontnode<<" ";
+        q.pop();
+        vis[src] = true;
+
+        for(auto Nbr : addList[frontnode]){
+          T nbrData = Nbr.first;
+
+          if(vis[nbrData]==0){
+            q.push(nbrData);
+            vis[nbrData] = 1;
+          }
+        }
+      
+    }
+  }
+};
+int main(){
+ Graph<char> g;
+ g.addEdge('a','b',4,0);
+ g.addEdge('b','c',5,0);
+
+ g.addEdge('d','e',7,0);
+
+ g.addEdge('e','f',7,0);
+//  g.addEdge('c','e',2,0);
+//  g.addEdge('e','f',7,0);
+
+map<int,bool>vis;
+ for(char node = 'a';node<='e';node++){
+    if(vis[node]==0){
+        g.BFS(node,vis);
+    }
+ }
+}
