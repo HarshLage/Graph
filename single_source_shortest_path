@@ -1,0 +1,145 @@
+#include<bits/stdc++.h>
+using namespace std;
+class graph{
+    public:
+    unordered_map<int,list<pair<int,int>>>adj;
+
+     void addedge(int u , int v , int weight , int direction){
+       if(direction==1){
+        adj[u].push_back({v,weight});
+       }
+       else{
+        adj[v].push_back({u,weight});
+        adj[u].push_back({v,weight});
+       }
+    }
+    void printlist(){
+        for(auto i : adj){
+            cout<< i.first << "->{";
+            for(auto j : i.second){
+                cout<<"("<<j.first<<" , "<<j.second<<"),";
+            }
+            cout<<"}";
+            cout<<endl;
+        }
+    }
+    void toporderDFS(int src , stack<int>&toporder,unordered_map<int,bool>&visited){
+        visited[src] = true;
+
+        for(auto nbrpair : adj[src]){
+            auto nbrnode = nbrpair.first;
+            auto nbrdis = nbrpair.second;
+            if(!visited[nbrnode]){
+                toporderDFS(nbrnode,toporder,visited);
+            }
+
+
+        }
+        toporder.push(src);
+
+    }
+     void shortestPathDFS(stack<int>&toporder,int n){
+            vector<int>dis(n,INT_MAX);
+            int src = toporder.top();
+            dis[src] = 0;
+
+            for(auto nbrpair : adj[src]){
+                int nbrnode = nbrpair.first;
+                int nbrdis = nbrpair.second;
+
+                if(dis[src] + nbrdis < dis[nbrnode]){
+                    dis[nbrnode] = dis[src] + nbrdis;
+                }
+            }
+
+            while(!toporder.empty()){
+                int src = toporder.top();
+                toporder.pop();
+
+                for(auto nbrpair : adj[src]){
+                int nbrnode = nbrpair.first;
+                int nbrdis = nbrpair.second;
+
+                if(dis[src] + nbrdis < dis[nbrnode]){
+                    dis[nbrnode] = dis[src] + nbrdis;
+                }
+            }
+
+
+            }
+            for(auto i : dis){
+                cout<<i<<" ";
+            }
+        }
+    void dijkstra(int n,int src , int dist){
+        set<pair<int,int>>st;
+        vector<int>dista(n+1,INT_MAX);
+
+        st.insert({0,src});
+        dista[src] =0;
+
+        while(!st.empty()){
+            auto topelement = st.begin();
+            auto nbr = *topelement;
+            int topdis = nbr.first;
+            int topnode = nbr.second;
+
+            st.erase(st.begin());
+        
+
+        for(pair<int,int>p : adj[topnode]){
+            int nbrnode = p.first;
+            int nbrdis = p.second;
+
+            if(topdis + nbrdis < dista[nbrnode] ){
+                //for a shorter distance 
+                //now update the set entry;
+                auto priviousentery = st.find({dista[nbrnode],nbrnode});
+                if(priviousentery != st.end()){
+                        st.erase(priviousentery);
+                }
+                dista[nbrnode] = topdis + nbrdis;
+                st.insert({dista[nbrnode],nbrnode});
+            }    
+        }
+        }
+        cout<<"the distance between nodes is :" << dista[dist]<<endl;
+    }
+};
+int main()
+{ 
+  graph g;
+//   g.addedge(0,1,5,1);
+//   g.addedge(0,2,3,1);
+//   g.addedge(1,3,3,1);
+//   g.addedge(2,1,2,1);
+//   g.addedge(2,3,5,1);
+//   g.addedge(2,4,6,1);
+//   g.addedge(4,3,1,1);
+//   g.addedge(0,1,5,1);
+
+ g.addedge(6,5,9,0);
+ g.addedge(6,3,2,0);
+ g.addedge(6,1,14,0);
+ 
+ g.addedge(1,3,9,0);
+ g.addedge(1,2,7,0);
+ g.addedge(2,3,10,0);
+ g.addedge(2,4,15,0);
+ g.addedge(4,3,11,0);
+ g.addedge(4,5,6,0);
+
+ g.dijkstra(6,6,4);
+// g.printlist();
+
+// int src = 0 ;
+// stack<int>topoOrder;
+// unordered_map<int,bool>visited;
+// g.toporderDFS(src,topoOrder,visited);
+// // while(!topoOrder.empty()) {
+// //     cout<<topoOrder.top()<<" ";
+// //     topoOrder.pop();
+// // }
+// g.shortestPathDFS(topoOrder,5);
+
+}
